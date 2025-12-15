@@ -80,12 +80,6 @@ def draw_vectors(points):
     for i in range(len(points) - 1):
         draw_vector_3(points[i], points[i + 1], pr.GRAY)
 
-#def draw_cross_products(points):
-#    for i in range(len(points) - 1):
-#        A =
-#        B = 
-#        cross_product_AB = cross_product()
-
 def draw_text_if_visible_3(camera, text, position_3d, font_size=20, color=pr.BLACK):
     """
     Affiche le texte à une position 2D projetée à partir d'une coordonnée 3D si elle est dans les limites de l'écran.

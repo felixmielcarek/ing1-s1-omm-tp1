@@ -95,20 +95,16 @@ def draw_vectors(points):
         draw_vector_3(points[i], points[i + 1], pr.BLUE)
 
 def vector_length(vector):
-    """Calcule la longueur d'un vecteur."""
     # TODO : implémenter le calcul de la longueur d'un vecteur (utiliser le produit scalaire cf. dot_product(A, B))
-    return 1
+    return math.sqrt(dot_product(vector, vector))
 
 def vector_normalize(vector):
-    """Normalise un vecteur pour obtenir un vecteur de longueur 1."""
-    #TODO : mettre en œuvre la normalisation d'un vecteur    
+    #TODO : mettre en œuvre la normalisation d'un vecteur
     length = vector_length(vector)
-    return Vector3(1,1,1)
+    return Vector3(vector.x/length,vector.y/length,vector.z/length)
 
 def dot_product(A, B):
-    """Calcule le produit scalaire entre deux vecteurs A et B."""
-    # TODO : mettre en œuvre le calcul du produit scalaire
-    return 0
+    return A.x*B.x + A.y*B.y + A.z*B.z
 
 def rotate_vector_y(vector, angle):
     """Fait tourner un vecteur autour de l'axe Y selon un angle donné en radians."""
@@ -132,19 +128,29 @@ def is_point_in_fov(fov_position, fov_direction, fov_distance, fov_angle, point)
     :return: True si le point est dans le champ de vision, sinon False.
     """
     # TODO : Vecteur du FOV vers le point
-    to_point = Vector3(0, 0, 0)
+    to_point = Vector3(point.x, point.y, point.z)
     
     # TODO : Calcule la distance au point et vérifie qu'elle est dans la distance FOV
-
+    dist_to_point= math.sqrt(
+        (point.x-fov_position.x)**2 +
+        (point.y-fov_position.y)**2 +
+        (point.z-fov_position.z)**2
+    )
+    if fov_distance < dist_to_point:
+        return False
     
     # Normalise la direction du FOV et le vecteur vers le point
     norm_fov_direction = vector_normalize(fov_direction)
     norm_to_point = vector_normalize(to_point)
     
     # TODO: Calcule le produit scalaire
-    
+    dot_product = dot_product(norm_fov_direction, norm_to_point)
+    if dot_product < 0:
+        return False
+
     # TODO Calcule le cosinus de l'angle demi du FOV
-    
+    cos_half_angle = math.cos(fov_angle/2)
+
     # TODO Vérifie si le produit scalaire satisfait la condition du FOV
     return 1 >= 2
 
@@ -164,6 +170,8 @@ def main():
     fov_angle = 90
     
     print(is_point_in_fov(fov_position, fov_direction, fov_distance, fov_angle, point_a))
+    print(is_point_in_fov(fov_position, fov_direction, fov_distance, fov_angle, point_b))
+    print(is_point_in_fov(fov_position, fov_direction, fov_distance, fov_angle, point_c))
 
     while not pr.window_should_close():
         update_camera_position(camera, movement_speed)
