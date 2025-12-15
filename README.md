@@ -21,3 +21,9 @@ Run exercice 2:
 ```bash
 python exo2.py
 ```
+
+# Results
+
+## Exercice 1
+
+![exercice 1 result image](./documentation/exo1-result.png)
