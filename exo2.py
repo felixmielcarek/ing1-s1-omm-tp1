@@ -103,7 +103,7 @@ def draw_text_if_visible_3(camera, text, position_3d, font_size=20, color=pr.BLA
         print("La position du texte est hors des limites de l'écran :", text_position_2d)
 
 
-def draw_scene(camera, grid_size, points, direction, turn):
+def draw_scene(camera, grid_size, points):
     """
     Affiche les éléments de la scène : axes, points, vecteurs et direction de rotation.
     """
@@ -118,9 +118,12 @@ def draw_scene(camera, grid_size, points, direction, turn):
     pr.end_mode_3d()
     
     # Affiche le texte de direction de rotation si visible
-    text_position_3d = Vector3(-3, 0, 0)
-    text = f"Direction de rotation : {turn}"
-    draw_text_if_visible_3(camera,text , text_position_3d, font_size=20, color=pr.BLACK)
+    for i in range(1,len(points)-1):
+        # Calcule la direction de rotation
+        direction, turn = check_turn_direction(points[i-1], points[i], points[i+1])
+        text_position_3d = Vector3(points[i].x, points[i].y, points[i].z)
+        text = f"{turn}"
+        draw_text_if_visible_3(camera, text , text_position_3d, font_size=20, color=pr.BLACK)
     
     pr.end_drawing()
 
@@ -180,22 +183,14 @@ def main():
     pr.set_target_fps(60)
     grid_size = 15
 
-    # Points de la scène
-    a = Vector3(2, 0, 3)    # Premier point
-    b = Vector3(-1, 0, 5)   # Point central
-    c = Vector3(-4, 0, 1)   # Dernier point
-    
-    # Calcule la direction de rotation
-    direction, turn = check_turn_direction(a, b, c)
-
-    movement_speed = 0.1
+    movement_speed = 0.4
     
     # Génère des points pour la spirale en zigzag
     points = generate_maze_path(50, int(grid_size/2), 1.0, False)
 
     while not pr.window_should_close():
         update_camera_position(camera, movement_speed)
-        draw_scene(camera, grid_size, points, direction, turn)
+        draw_scene(camera, grid_size, points)
 
     pr.close_window()
 
