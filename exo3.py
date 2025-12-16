@@ -90,6 +90,22 @@ def draw_points(points):
     for point in points:
         pr.draw_sphere(point, 0.1, pr.RED)
 
+def draw_text_if_visible_3(camera, text, position_3d, font_size=20, color=pr.BLACK):
+    """
+    Affiche le texte à une position 2D projetée à partir d'une coordonnée 3D si elle est dans les limites de l'écran.
+    
+    :param camera: La caméra utilisée pour la projection.
+    :param text: Texte à afficher.
+    :param position_3d: Position 3D du texte.
+    :param font_size: Taille de la police du texte.
+    :param color: Couleur du texte.
+    """
+    text_position_2d = pr.get_world_to_screen(position_3d, camera)
+    if 0 <= text_position_2d.x <= pr.get_screen_width() and 0 <= text_position_2d.y <= pr.get_screen_height():
+        pr.draw_text(text, int(text_position_2d.x), int(text_position_2d.y), font_size, color)
+    else:
+        print("La position du texte est hors des limites de l'écran :", text_position_2d)
+
 def draw_vectors(points):
     for i in range(len(points) - 1):
         draw_vector_3(points[i], points[i + 1], pr.BLUE)
@@ -144,15 +160,19 @@ def is_point_in_fov(fov_position, fov_direction, fov_distance, fov_angle, point)
     norm_to_point = vector_normalize(to_point)
     
     # TODO: Calcule le produit scalaire
-    dot_product = dot_product(norm_fov_direction, norm_to_point)
-    if dot_product < 0:
+    dot_product_fov_point = dot_product(norm_fov_direction, norm_to_point)
+    if dot_product_fov_point < 0:
         return False
 
     # TODO Calcule le cosinus de l'angle demi du FOV
     cos_half_angle = math.cos(fov_angle/2)
 
     # TODO Vérifie si le produit scalaire satisfait la condition du FOV
-    return 1 >= 2
+    cos_theta = dot_product_fov_point / (dist_to_point * fov_distance)
+    if cos_theta < cos_half_angle:
+        return True
+    else:
+        return False
 
 def main():
     pr.init_window(800, 600, "FOV")
@@ -168,22 +188,26 @@ def main():
     point_c = Vector3(-5, 0, 4)
     fov_distance = 5
     fov_angle = 90
-    
-    print(is_point_in_fov(fov_position, fov_direction, fov_distance, fov_angle, point_a))
-    print(is_point_in_fov(fov_position, fov_direction, fov_distance, fov_angle, point_b))
-    print(is_point_in_fov(fov_position, fov_direction, fov_distance, fov_angle, point_c))
 
     while not pr.window_should_close():
         update_camera_position(camera, movement_speed)
         pr.begin_drawing()
         pr.clear_background(pr.RAYWHITE)
         pr.begin_mode_3d(camera)
-        
+
         pr.draw_grid(grid_size, 1)  # Dessine une grille pour référence
         draw_points([point_a, point_b, point_c])
         draw_fov_cone(fov_position, fov_direction, fov_distance, fov_angle)
 
         pr.end_mode_3d()
+
+        a_point_of_fov = is_point_in_fov(fov_position, fov_direction, fov_distance, fov_angle, point_a)
+        b_point_of_fov = is_point_in_fov(fov_position, fov_direction, fov_distance, fov_angle, point_b)
+        c_point_of_fov = is_point_in_fov(fov_position, fov_direction, fov_distance, fov_angle, point_c)
+        draw_text_if_visible_3(camera, str(a_point_of_fov) , point_a, font_size=20, color=pr.BLACK)
+        draw_text_if_visible_3(camera, str(b_point_of_fov) , point_b, font_size=20, color=pr.BLACK)
+        draw_text_if_visible_3(camera, str(c_point_of_fov) , point_c, font_size=20, color=pr.BLACK)
+
         pr.end_drawing()
 
     pr.close_window()

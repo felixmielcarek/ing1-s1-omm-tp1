@@ -27,3 +27,7 @@ python exo2.py
 ## Exercice 1
 
 ![exercice 1 result image](./documentation/exo1-result.png)
+
+## Exercice 2
+
+![exercice 2 result image](./documentation/exo2-result.png)
