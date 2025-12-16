@@ -1,3 +1,7 @@
+# Context
+
+Instructions available in [sujet.pdf](./sujet.pdf).
+
 # Requirements
 
 1. Install Python
