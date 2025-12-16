@@ -13,18 +13,13 @@ pip install numpy trimesh raylib
 
 # Run programs
 
-
-Run exercice 1:
-
-```bash
-python exo1.py
-```
-
-Run exercice 2:
+Run exercices:
 
 ```bash
-python exo2.py
+python exoA.py
 ```
+
+Replace `A` by the number of the target exercice.
 
 # Results
 
@@ -35,3 +30,15 @@ python exo2.py
 ## Exercice 2
 
 ![exercice 2 result image](./documentation/exo2-result.png)
+
+## Exercice 3
+
+![exercice 3 result image](./documentation/exo3-result.png)
+
+## Exercice 4
+
+![exercice 4 result image](./documentation/exo4-result.png)
+
+## Exercice 5
+
+![exercice 5 result image](./documentation/exo5-result.png)
